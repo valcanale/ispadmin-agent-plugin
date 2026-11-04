@@ -30,7 +30,7 @@ button { padding: .5rem .8rem; font: inherit; margin: .5rem .5rem 0 0; }
 <p>Configurazione ${configured ? 'salvata' : 'da completare'}.</p>
 ${messages.length ? `<ul role="status">${messages.map(message => `<li>${escapeHtml(message)}</li>`).join('')}</ul>` : ''}
 <form method="post" action="/" autocomplete="off">
-<label>URL base <input name="baseUrl" type="url" required value="${escapeHtml(baseUrl)}" placeholder="https://ispadmin.example/api/v1/"></label>
+<label>URL base <input name="baseUrl" type="url" required value="${escapeHtml(baseUrl ? new URL(baseUrl).origin : '')}" placeholder="https://ispadmin.example"></label>
 <label>Token API <input name="token" type="password" required maxlength="1024"></label>
 <label>ID fattura per la verifica (facoltativo) <input name="invoiceId" inputmode="numeric" pattern="[0-9]+"></label>
 <button name="action" value="verify">Verifica connessione</button>

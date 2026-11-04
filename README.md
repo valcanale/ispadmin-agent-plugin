@@ -32,9 +32,13 @@ codex plugin add ispadmin@ispadmin-marketplace
 
 Puoi installare **ISPAdmin** anche dal catalogo dell'app dopo aver aggiunto il marketplace. Per aggiornare il catalogo, usa `codex plugin marketplace upgrade ispadmin-marketplace`. [Documentazione OpenAI sui marketplace](https://developers.openai.com/plugins/build/plugins#add-a-marketplace-from-the-cli)
 
-## Aprire la maschera di configurazione
+## Configurare ISPAdmin in Codex
 
-La pagina **Gestisci** di Codex gestisce il pacchetto. I campi URL e token si trovano nella maschera locale nel browser. Per aprirla prima di configurare OAuth, clona il repository e avvia la sola maschera.
+Con Node.js 22 o successivo installato, apri **Plugin → ISPAdmin → Gestisci → Collegamento ISPAdmin → Configura ISPAdmin** in una versione desktop che supporta le impostazioni MCP. Inserisci l’URL base HTTPS dell’istanza, per esempio `https://ispadmin.example`, e il token nel campo mascherato. Premi **Salva** e apri una nuova chat per usare gli strumenti ISPAdmin. Il token viene salvato localmente e il plugin usa il server MCP incluso nel pacchetto.
+
+## Configurare un server MCP separato
+
+Per una distribuzione con server separato, puoi configurare l’istanza dal browser prima di impostare OAuth. Clona il repository e avvia la maschera amministrativa del server.
 
 ```bash
 git clone https://github.com/valcanale/ispadmin-agent-plugin.git
@@ -70,7 +74,7 @@ Entrambi i listener si avviano su `127.0.0.1`. Configura un proxy HTTPS per inol
 ## Configurare ISPAdmin dal browser
 
 1. Apri `http://127.0.0.1:8765/` sul computer del server. Per un server remoto puoi inoltrare la porta sul tuo computer con `ssh -N -L 8765:127.0.0.1:8765 utente@server`.
-2. Inserisci l'URL HTTPS dell'istanza o della relativa API v1 e un token ISPAdmin con i permessi di lettura desiderati.
+2. Inserisci l'URL HTTPS dell'istanza, ad esempio `https://ispadmin.example`, e un token ISPAdmin con i permessi di lettura desiderati.
 3. Seleziona **Verifica connessione**. Per verificare anche le fatture, inserisci un ID fattura esistente.
 4. Reinserisci il token nel campo mascherato e seleziona **Salva**.
 

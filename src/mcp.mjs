@@ -9,19 +9,19 @@ function result(text, isError = false) {
   return {content: [{type: 'text', text}], isError};
 }
 
-function registerTools({store, fetchImpl}) {
-  const mcp = new McpServer({name: 'ispadmin', version: '0.1.0'});
+export function registerTools({store, fetchImpl, local = false}) {
+  const mcp = new McpServer({name: 'ispadmin', version: '0.2.0'});
   const securitySchemes = [{type: 'oauth2', scopes: [readScope]}];
   for (const [name, operation] of Object.entries(operations)) {
     mcp.registerTool(name, {
       description: operation.description,
       inputSchema: operation.input,
       annotations: {readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true},
-      _meta: {securitySchemes},
+      ...(local ? {} : {_meta: {securitySchemes}}),
     }, async args => {
       try {
         const settings = await store.load();
-        if (!settings) return result('Configura ISPAdmin nella maschera del server.', true);
+        if (!settings) return result(local ? 'Apri Plugin → ISPAdmin → Configura ISPAdmin.' : 'Configura ISPAdmin nella maschera del server.', true);
         const data = await createIspAdminClient(settings, fetchImpl).get(name, args);
         return result(JSON.stringify(data));
       } catch (error) {

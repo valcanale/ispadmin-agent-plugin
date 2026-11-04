@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="it">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; form-action 'none'">
+<title>Configura ISPAdmin</title>
+<style>
+:root {color-scheme: light dark; font: 16px system-ui}
+body {margin: 20px}
+label {display: block; margin-bottom: 16px}
+input {display: block; box-sizing: border-box; width: 100%; padding: 8px; font: inherit}
+button {padding: 8px 12px; font: inherit}
+</style>
+<h1>Collegamento ISPAdmin</h1>
+<form autocomplete="off">
+  <label>URL base <input id="baseUrl" type="url" placeholder="https://ispadmin.example" maxlength="2048" required></label>
+  <label>Token API <input id="token" type="password" maxlength="1024" required></label>
+  <button type="submit" disabled>Salva</button>
+</form>
+<p role="status">Apertura del modulo…</p>
+<script>
+const form = document.querySelector('form');
+const button = form.querySelector('button');
+const status = document.querySelector('[role=status]');
+const baseUrl = document.getElementById('baseUrl');
+const token = document.getElementById('token');
+const pending = new Map();
+let sequence = 0;
+function send(method, params, id) {
+  window.parent.postMessage({jsonrpc: '2.0', method, params, id}, '*');
+}
+function request(method, params) {
+  return new Promise((resolve, reject) => {
+    const id = ++sequence;
+    const timeout = setTimeout(() => {
+      pending.delete(id);
+      reject(new Error('Timeout'));
+    }, 15000);
+    pending.set(id, {resolve, reject, timeout});
+    send(method, params, id);
+  });
+}
+window.addEventListener('message', event => {
+  if (event.source !== window.parent || event.data?.jsonrpc !== '2.0') return;
+  if (event.data.method === 'ui/notifications/tool-result' && !baseUrl.value) {
+    baseUrl.value = event.data.params?.structuredContent?.baseUrl ?? '';
+  }
+  const reply = pending.get(event.data.id);
+  if (!reply) return;
+  pending.delete(event.data.id);
+  clearTimeout(reply.timeout);
+  if (event.data.error) reply.reject(new Error('Errore del client'));
+  else reply.resolve(event.data.result);
+});
+form.addEventListener('submit', async event => {
+  event.preventDefault();
+  button.disabled = true;
+  try {
+    const arguments_ = {baseUrl: baseUrl.value, token: token.value};
+    token.value = '';
+    const result = await request('tools/call', {name: 'ispadmin_save_connection', arguments: arguments_});
+    status.textContent = result?.structuredContent?.status === 'ok' && !result.isError
+      ? 'Configurazione salvata.' : 'Salvataggio non riuscito. Controlla URL e token.';
+  } catch {
+    status.textContent = 'Salvataggio non riuscito. Riapri il modulo e riprova.';
+  } finally {
+    button.disabled = false;
+  }
+});
+request('ui/initialize', {
+  protocolVersion: '2026-01-26', appInfo: {name: 'ispadmin-configure', version: '0.2.0'}, appCapabilities: {},
+}).then(() => {
+  send('ui/notifications/initialized');
+  button.disabled = false;
+  status.textContent = '';
+}).catch(() => {status.textContent = 'Il client non ha aperto il collegamento con il plugin.';});
+</script>
+</html>
