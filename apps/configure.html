@@ -68,9 +68,9 @@ form.addEventListener('submit', async event => {
   }
 });
 request('ui/initialize', {
-  protocolVersion: '2026-01-26', appInfo: {name: 'ispadmin-configure', version: '0.2.0'}, appCapabilities: {},
+  protocolVersion: '2026-01-26', appInfo: {name: 'ispadmin-configure', version: '0.2.2'}, appCapabilities: {},
 }).then(() => {
-  send('ui/notifications/initialized');
+  window.parent.postMessage({jsonrpc: '2.0', method: 'ui/notifications/initialized'}, '*');
   button.disabled = false;
   status.textContent = '';
 }).catch(() => {status.textContent = 'Il client non ha aperto il collegamento con il plugin.';});
