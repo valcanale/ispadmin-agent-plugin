@@ -3,8 +3,7 @@
   "mcpServers": {
     "ispadmin-local": {
       "type": "stdio",
-      "command": "/bin/sh",
-      "args": ["${PLUGIN_ROOT}/scripts/start-local.sh"]
+      "command": "./scripts/start-local.sh"
     }
   }
 }

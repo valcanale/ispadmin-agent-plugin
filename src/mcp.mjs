@@ -10,7 +10,7 @@ function result(text, isError = false) {
 }
 
 export function registerTools({store, fetchImpl, local = false}) {
-  const mcp = new McpServer({name: 'ispadmin', version: '0.2.0'});
+  const mcp = new McpServer({name: 'ispadmin', version: '0.2.1'});
   const securitySchemes = [{type: 'oauth2', scopes: [readScope]}];
   for (const [name, operation] of Object.entries(operations)) {
     mcp.registerTool(name, {
