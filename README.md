@@ -32,7 +32,20 @@ codex plugin add ispadmin@ispadmin-marketplace
 
 Puoi installare **ISPAdmin** anche dal catalogo dell'app dopo aver aggiunto il marketplace. Per aggiornare il catalogo, usa `codex plugin marketplace upgrade ispadmin-marketplace`. [Documentazione OpenAI sui marketplace](https://developers.openai.com/plugins/build/plugins#add-a-marketplace-from-the-cli)
 
-## Avviare il server
+## Aprire la maschera di configurazione
+
+La pagina **Gestisci** di Codex gestisce il pacchetto. I campi URL e token si trovano nella maschera locale nel browser. Per aprirla prima di configurare OAuth, clona il repository e avvia la sola maschera.
+
+```bash
+git clone https://github.com/valcanale/ispadmin-agent-plugin.git
+cd ispadmin-agent-plugin
+npm ci
+npm run setup
+```
+
+Apri `http://127.0.0.1:8765/`, inserisci URL e token e salva. Premi Ctrl+C nel terminale per chiudere la maschera prima di avviare il server completo. Il server completo riutilizza la configurazione salvata.
+
+## Avviare il server MCP
 
 Servono Node.js 22 o successivo, accesso di rete all'API ISPAdmin e un provider OAuth compatibile con MCP. Un'installazione serve una sola istanza ISPAdmin. Gli utenti ammessi condividono i permessi del token configurato dall'operatore.
 

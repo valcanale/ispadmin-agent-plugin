@@ -1,14 +1,14 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "ispadmin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Configure read-only access to ISPAdmin clients, services, invoices, and scheduling.",
   "license": "MIT",
   "repository": "https://github.com/valcanale/ispadmin-agent-plugin",
   "extensions": {
     "com.openai": {
       "onboardingSkill": "./skills/ispadmin-setup/SKILL.md",
-      "interface": {"displayName": "ISPAdmin", "capabilities": ["Read"]}
+      "interface": {"displayName": "ISPAdmin", "capabilities": ["Read"], "websiteURL": "https://github.com/valcanale/ispadmin-agent-plugin#aprire-la-maschera-di-configurazione"}
     }
   }
 }
